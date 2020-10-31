@@ -3,6 +3,8 @@ import numpy as np
 import tflearn
 import unittest
 import os
+import random 
+import string
 
 class TestModels(unittest.TestCase):
     """
@@ -62,7 +64,7 @@ class TestModels(unittest.TestCase):
                                           seq_maxlen=maxlen,
                                           clip_gradients=5.0)
             m.fit(X, Y, validation_set=0.1, n_epoch=100, snapshot_epoch=False)
-            res = m.generate(10, temperature=.5, seq_seed="12345")
+            res = m.generate(10, temperature=.5, seq_seed= ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(5)))
             #self.assertEqual(res, "123456789101234", "SequenceGenerator test failed! Generated sequence: " + res + " expected '123456789101234'")
 
             # Testing save method
@@ -71,7 +73,7 @@ class TestModels(unittest.TestCase):
 
             # Testing load method
             m.load("test_seqgen.tflearn")
-            res = m.generate(10, temperature=.5, seq_seed="12345")
+            res = m.generate(10, temperature=.5, seq_seed=''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(5)))
             # TODO: Fix test
             #self.assertEqual(res, "123456789101234", "SequenceGenerator test failed after loading model! Generated sequence: " + res + " expected '123456789101234'")
 
@@ -108,7 +110,7 @@ class TestModels(unittest.TestCase):
                                           seq_maxlen=maxlen,
                                           clip_gradients=5.0)
             m.fit(X, Y, validation_set=0.1, n_epoch=100, snapshot_epoch=False)
-            res = m.generate(4, temperature=.5, seq_seed=["hello","world"])
+            res = m.generate(4, temperature=.5, seq_seed=[''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(5)),''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for i in range(5))])
             res_str = " ".join(res[-2:])
             self.assertEqual(res_str, "hello world", "SequenceGenerator (word level) test failed! Generated sequence: " + res_str + " expected 'hello world'")
 
@@ -118,7 +120,7 @@ class TestModels(unittest.TestCase):
 
             # Testing load method
             m.load("test_seqgen_word.tflearn")
-            res = m.generate(4, temperature=.5, seq_seed=["hello","world"])
+            res = m.generate(4, temperature=.5, seq_seed=[''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(5)),''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(5))])
             res_str = " ".join(res[-2:])
             self.assertEqual(res_str, "hello world", "Reloaded SequenceGenerator (word level) test failed! Generated sequence: " + res_str + " expected 'hello world'")
 
